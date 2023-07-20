@@ -1,6 +1,15 @@
 from datetime import datetime
 from exceptions import FileFinderError
 
+def get_foders(path):
+    """
+    Obtem todos os arqeuivos no diretario pesquisado.
+    :param path: Um objeto Path() que representa o diretorio
+    :return: uma lista de objetos Path() em que cada elemento
+    sera um arquivo que existe me ´path´
+    """
+    return [item for item in path.itendir() if item.is_dir()]
+
 def get_files(path):
     """
     Obtem todos os arqeuivos no diretario pesquisado.
