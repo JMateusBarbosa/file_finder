@@ -1,11 +1,12 @@
 import click
+import shutil
 from pathlib import Path
 from utils import find_by_name
 from utils import find_by_ext
 from utils import find_by_mod
 from utils import timestamp_to_string
 from utils import get_foders
-
+from datetime import datetime
 def process_search(path, key, value, recursive):
     search_mapping ={
         "name": find_by_name,
@@ -48,8 +49,8 @@ def process_result(files, key, value):
 @click.option("-k", "--key", required=True, type=click.Choice(["name","ext", "mod"]))
 @click.option("-v", "--value", required=True)
 @click.option("-r", "recursive", is_flag=True, default=False)
-
-def finder(path, key, value, recursive):
+@click.option("-c", "--copy-to")
+def finder(path, key, value, recursive, copy_to):
     root = Path(path)
 
     if not root.is_dir():
@@ -60,4 +61,14 @@ def finder(path, key, value, recursive):
     files = process_search(path=root, key=key, value=value, recursive=recursive)
     process_result(files=files, key=key, value=value)
 
+    if copy_to:
+        copy_path = path(copy_to)
+
+        if not copy_path.is_dir():
+            copy_path.mkdir(parents=True)
+
+        for file in files:
+            dst_file = copy_path / f"{file.stem}{datetime.now().strftime('%d%m%Y%H%M%S%f')}{file.suffix}"
+
+        shutil.copy(src=file.absolute(), dst=dst_file)
 finder()
