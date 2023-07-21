@@ -54,3 +54,18 @@ def find_by_mod(path, value):
 def timestamp_to_string(system_timestamp):
     datetime_obj = datetime.fromtimestamp(system_timestamp)
     return datetime_obj.strftime('%d/%m/%Y - %H:%M:%S:%f')
+def get_files_details(files):
+    files_details = []
+
+    for file in files:
+        stat = file.stat()
+        details = [
+            file.name,
+            timestamp_to_string(stat.st_birthtime),
+            timestamp_to_string(stat.st_mtime),
+            file.absolute()
+        ]
+
+        files_details.append(details)
+
+    return files_details
